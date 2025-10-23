@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>貸款月付金試算器</title>
+  <style>
+    body {
+      font-family: "Poppins", "Noto Sans TC", sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      background-color: #004c97;
+      color: white;
+      padding: 20px 0;
+    }
+
+    main {
+      max-width: 600px;
+      background: white;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      background-color: #0072ce;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    .result {
+      margin-top: 25px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .result h3 {
+      margin-top: 0;
+      color: #004c97;
+    }
+
+    .highlight {
+      color: #d9534f;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 20px 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>貸款月付金試算器</h1>
+  </header>
+
+  <main>
+    <h2>輸入貸款資訊</h2>
+    <label for="amount">貸款金額（元）：</label>
+    <input type="number" id="amount" placeholder="例如：1000000">
+
+    <label for="rate">年利率（%）：</label>
+    <input type="number" id="rate" step="0.01" placeholder="例如：2.5">
+
+    <label for="months">貸款期數（月）：</label>
+    <input type="number" id="months" placeholder="例如：60">
+
+    <button id="calculateBtn">開始試算</button>
+
+    <div class="result" id="result">
+      <h3>試算結果</h3>
+      <p>每月應付金額：<span id="monthly" class="highlight">--</span> 元</p>
+      <p>總還款金額：<span id="total" class="highlight">--</span> 元</p>
+      <p>總利息支出：<span id="interest" class="highlight">--</span> 元</p>
+      <hr>
+      <p>💡 若利率上升，月付金也會相對提高；延長期數則可降低每月壓力，但總利息支出會增加。</p>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 智慧理財服務｜貸款月付金試算工具
+  </footer>
+
+  <script>
+    document.getElementById("calculateBtn").addEventListener("click", function() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const annualRate = parseFloat(document.getElementById("rate").value);
+      const months = parseInt(document.getElementById("months").value);
+
+      if (isNaN(amount) || isNaN(annualRate) || isNaN(months) || amount <= 0 || annualRate < 0 || months <= 0) {
+        alert("請輸入正確的貸款金額、利率與期數！");
+        return;
+      }
+
+      const monthlyRate = annualRate / 12 / 100; // 月利率
+      const monthlyPayment = (amount * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+                            (Math.pow(1 + monthlyRate, months) - 1);
+
+      const totalPayment = monthlyPayment * months;
+      const totalInterest = totalPayment - amount;
+
+      document.getElementById("monthly").textContent = monthlyPayment.toFixed(2);
+      document.getElementById("total").textContent = totalPayment.toFixed(2);
+      document.getElementById("interest").textContent = totalInterest.toFixed(2);
+    });
+  </script>
+</body>
+</html>
